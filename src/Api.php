@@ -30,7 +30,7 @@ class Api {
 	 * @param string        $type     Request type, post or get.
 	 */
 	public function __construct( public string $endpoint, public array $params = [], public array|Options $options, public string $type = 'post' ) {
-		if ( ! is_a( $this->options, 'Options' ) ) {
+		if ( ! is_a( $this->options, 'Viewpoint\ViewpointApi\Options' ) ) {
 			$this->options = new Options( ...$this->options );
 		}
 
@@ -69,9 +69,12 @@ class Api {
 
 		// Try remote API.
 		if ( ! $data ) {
-			$data = $this->call();
-			if ( $data && $this->options->cache ) {
-				$transient->set( $data );
+			$response = $this->call();
+			if ( $response['body'] ) {
+				$data = self::format_body( $response['body'] );
+				if ( $this->options->cache ) {
+					$transient->set( $data );
+				}
 			}
 		}
 		$data = apply_filters( 'viewpoint_api_get_data/' . $this->options->name, $data, $this );
@@ -110,6 +113,16 @@ class Api {
 			return false;
 		}
 		return $result;
+	}
+
+	/**
+	 * Format response body.
+	 *
+	 * @param string $body Body of API response.
+	 * @return obj
+	 */
+	private static function format_body( $body ) {
+		return json_decode( $body );
 	}
 
 	/**
