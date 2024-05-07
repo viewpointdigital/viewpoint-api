@@ -1,0 +1,10 @@
+/node_modules
+/vendor
+/public
+/dist
+/storage
+.env
+.budfiles
+npm-debug.log
+yarn-error.log
+.DS_Store

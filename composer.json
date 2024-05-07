@@ -1,0 +1,17 @@
+{
+    "name": "viewpoint/viewpoint-api",
+    "description": "Tools to call external API.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Viewpoint\\ViewpointApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jeremy Lind",
+            "email": "jeremy@viewpointdigital.ca"
+        }
+    ],
+    "require": {}
+}
