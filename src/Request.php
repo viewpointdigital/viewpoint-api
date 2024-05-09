@@ -7,7 +7,7 @@
 
 namespace Viewpoint\ViewpointApi;
 
-use Viewpoint\ViewpointApi\Transient;
+use Viewpoint\ViewpointLogger\Logger;
 
 /**
  * Define API Endpoint
@@ -98,10 +98,10 @@ class Request {
 			);
 		}
 
+		if ( $this->debug ) {
+			Logger::log( $this->name . ': ' . $result['body'] );
+		}
 		if ( is_wp_error( $result ) || 200 !== $result['response']['code'] ) {
-			if ( $this->debug ) {
-				self::log( $this->name, $result['body'] );
-			}
 			return false;
 		}
 		return $result;
@@ -128,23 +128,5 @@ class Request {
 				break;
 		}
 		return $data;
-	}
-
-	/**
-	 * Log request to Query Monitor.
-	 *
-	 * @param string $title  Title of log entry.
-	 * @param string $body   Body of response.
-	 * @return void
-	 */
-	public static function log( $title, $body ) {
-		do_action(
-			'qm/debug',
-			'{title}: {body}',
-			[
-				'title' => $title,
-				'body'  => $body,
-			]
-		);
 	}
 }

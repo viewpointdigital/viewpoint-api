@@ -7,9 +7,6 @@
 
 namespace Viewpoint\ViewpointApi;
 
-use Viewpoint\ViewpointApi\Api;
-use Viewpoint\ViewpointApi\Request;
-
 /**
  * Define API Endpoint
  */
