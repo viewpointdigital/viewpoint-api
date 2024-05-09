@@ -11,32 +11,13 @@ namespace Viewpoint\ViewpointApi;
  * Transient stored data.
  */
 class Transient {
-
-	/**
-	 * Name of transient.
-	 *
-	 * @var string
-	 */
-	public $name;
-
 	/**
 	 * Constructor
 	 *
 	 * @param string $name Name of transient.
 	 * @param int    $cache Cache timeout in minutes. Set false to disable cache.
 	 */
-	public function __construct( $name, public int $cache = 60 ) {
-		$this->name = $this->make_name( $name );
-	}
-
-	/**
-	 * Namespace transient name.
-	 *
-	 * @param string $name Name of transient.
-	 * @return string
-	 */
-	private function make_name( $name ) {
-		return 'ccb_' . $name;
+	public function __construct( public string $name, public int $cache = 60 ) {
 	}
 
 	/**
