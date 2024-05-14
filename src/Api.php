@@ -12,6 +12,13 @@ namespace Viewpoint\ViewpointApi;
  */
 class Api {
 	/**
+	 * Configured endpoints.
+	 *
+	 * @var Endpoint[]
+	 */
+	public $endpoints = [];
+
+	/**
 	 * Options for API
 	 *
 	 * @param string      $name API name.
@@ -34,10 +41,9 @@ class Api {
 	 *
 	 * @param string $endpoint Endpoint base.
 	 * @param array  $params   Parameters.
-	 * @param string $type     Request type.
-	 * @return Endpoint
+	 * @return void
 	 */
-	public function endpoint( string $endpoint, array $params = [] ) {
-		return new Endpoint( $endpoint, $params, $this );
+	public function add_endpoint( string $endpoint, array $params = [] ) {
+		$this->endpoints[ $endpoint ] = new Endpoint( $endpoint, $params, $this );
 	}
 }
