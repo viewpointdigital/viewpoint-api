@@ -7,7 +7,7 @@
 
 namespace Viewpoint\ViewpointApi;
 
-use Viewpoint\ViewpointLogger\Logger;
+use Viewpoint\Utilities\Logger;
 
 /**
  * Define API Endpoint
@@ -84,6 +84,9 @@ class Request {
 			// Arbitrary timeout value in seconds. Set this to something larger because some APIs are slow and transfers a lot of data.
 			'timeout' => 180,
 		];
+		if ( $this->debug ) {
+			Logger::log( $this->name . ': ' . $this->url );
+		}
 		if ( 'post' === $this->type ) {
 			$result = wp_remote_post(
 				$this->url,
