@@ -16,10 +16,10 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://jeremylind@bitbucket.org/viewpointdigital/viewpoint-logger.git"
+            "url": "https://jeremylind@bitbucket.org/viewpointdigital/viewpoint-utilities.git"
         }
     ],
     "require": {
-        "viewpoint/viewpoint-logger": "dev-main"
+        "viewpoint/viewpoint-utilities": "dev-main"
     }
 }
