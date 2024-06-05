@@ -112,13 +112,58 @@ class Formatter {
 	 * @return mixed
 	 */
 	private static function getDataFromObject( $field, $obj ) {
+		$value = false;
 		if ( str_starts_with( $field, 'xpath:' ) && is_a( $obj, 'SimpleXMLElement' ) ) {
-			return $obj->xpath( str_replace( 'xpath:', '', $field ) );
+			$value = $obj->xpath( str_replace( 'xpath:', '', $field ) );
 		} elseif ( isset( $obj->{$field} ) ) {
-			return $obj->{$field};
+			$value = $obj->{$field};
 		} elseif ( isset( $obj[ $field ] ) ) {
-			return $obj[ $field ];
+			$value = $obj[ $field ];
 		}
-		return false;
+		return self::autoCast( $value );
+	}
+
+
+	/**
+	 * Attempt to cast a SimpleXML node to a strong type.
+	 * Will recursively process arrays.
+	 *
+	 * @param    SimpleXML $node A single node on the entitiy.
+	 * @return   mixed
+	 */
+	private static function autoCast( $node ) {
+		// If the node has children, convert it to an array
+		// and recursively process the child nodes.
+		if ( is_a( $node, 'SimpleXMLElement' ) && $node->children()->count() ) {
+			$array = [];
+			// If the node happens to have an id attribute,
+			// transform it into a property so that it's not lost.
+			$id = false;
+			if ( ! empty( $node->attributes() ) ) {
+				foreach ( $node->attributes() as $key => $value ) {
+					if ( false !== stristr( $key, 'id' ) ) {
+						$id = (int) $value;
+						break;
+					}
+				}
+			}
+			if ( $id ) {
+				$array['id'] = $id;
+			}
+			foreach ( $node->children() as $child ) {
+				$array[ $child->getName() ] = self::autoCast( $child );
+			}
+			return $array;
+		} elseif ( is_array( $node ) ) {
+			return (array) $node;
+		} elseif ( 'true' === (string) $node ) {
+			return true;
+		} elseif ( 'false' === (string) $node ) {
+			return false;
+		} elseif ( strlen( (int) $node ) === strlen( (string) $node ) ) {
+			return (int) $node;
+		} else {
+			return (string) $node;
+		}
 	}
 }
