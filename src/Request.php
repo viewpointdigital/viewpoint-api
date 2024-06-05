@@ -63,7 +63,7 @@ class Request {
 			$response = $this->call();
 			if ( $response && $response['body'] ) {
 				$data = $response['body'];
-				if ( $this->cache ) {
+				if ( $this->cache && ! $this->debug ) {
 					$transient->set( $data );
 				}
 			}
@@ -130,6 +130,6 @@ class Request {
 				$data = $this->response;
 				break;
 		}
-		return $data;
+		return apply_filter( 'viewpoint_api_filter_data', $data, $this );
 	}
 }

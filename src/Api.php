@@ -39,11 +39,12 @@ class Api {
 	/**
 	 * Create an endpoint on this API.
 	 *
-	 * @param string $endpoint Endpoint base.
-	 * @param array  $params   Parameters.
+	 * @param string    $endpoint  Endpoint base.
+	 * @param array     $params    Parameters.
+	 * @param Formatter $formatter Formatter.
 	 * @return void
 	 */
-	public function add_endpoint( string $endpoint, array $params = [] ) {
-		$this->endpoints[ $endpoint ] = new Endpoint( $endpoint, $params, $this );
+	public function add_endpoint( string $endpoint, array $params = [], Formatter $formatter ) {
+		$this->endpoints[ $endpoint ] = new Endpoint( $endpoint, $params, $this, $formatter );
 	}
 }

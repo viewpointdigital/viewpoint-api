@@ -24,8 +24,9 @@ class Endpoint {
 	 * @param string    $endpoint API endpoint.
 	 * @param array     $params   Query params.
 	 * @param array|Api $api  API options.
+	 * @param Formatter $formatter Formatter.
 	 */
-	public function __construct( public string $endpoint, public array $params = [], public Api $api ) {
+	public function __construct( public string $endpoint, public array $params = [], public Api $api, public Formatter $formatter ) {
 		$this->url = $this->make_url();
 	}
 
@@ -56,6 +57,7 @@ class Endpoint {
 			}
 			$this->url = add_query_arg( $url_args, $this->url );
 		}
-		return new Request( $name, $this->url, $this->params, $type, $this->api->headers, $this->api->cache, $this->api->debug );
+		$request = new Request( $name, $this->url, $this->params, $type, $this->api->headers, $this->api->cache, $this->api->debug );
+		return $this->formatter->format( $request->response );
 	}
 }
