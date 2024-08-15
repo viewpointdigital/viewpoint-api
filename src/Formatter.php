@@ -113,11 +113,17 @@ class Formatter {
 	 */
 	private static function getDataFromObject( $field, $obj ) {
 		$value = false;
-		if ( str_starts_with( $field, 'xpath:' ) && is_a( $obj, 'SimpleXMLElement' ) ) {
-			$value = $obj->xpath( str_replace( 'xpath:', '', $field ) );
-		} elseif ( isset( $obj->{$field} ) ) {
+		if ( is_a( $obj, 'SimpleXMLElement' ) ) {
+			if ( str_starts_with( $field, 'xpath:' ) ) {
+				$value = $obj->xpath( str_replace( 'xpath:', '', $field ) );
+			} elseif ( isset( $obj->{$field} ) ) {
+				$value = $obj->{$field};
+			} elseif ( isset( $obj[ $field ] ) ) {
+				$value = $obj[ $field ];
+			}
+		} elseif ( is_object( $obj ) && isset( $obj->{$field} ) ) {
 			$value = $obj->{$field};
-		} elseif ( isset( $obj[ $field ] ) ) {
+		} elseif ( is_array( $obj ) && isset( $obj[ $field ] ) ) {
 			$value = $obj[ $field ];
 		}
 		return self::autoCast( $value );
