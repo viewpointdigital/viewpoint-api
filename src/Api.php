@@ -44,7 +44,7 @@ class Api {
 	 * @param Formatter $formatter Formatter.
 	 * @return void
 	 */
-	public function add_endpoint( string $endpoint, array $params = [], Formatter $formatter ) {
-		$this->endpoints[ $endpoint ] = new Endpoint( $endpoint, $params, $this, $formatter );
+	public function add_endpoint( string $endpoint, array $params = [], Formatter $formatter = null ) {
+		$this->endpoints[ $endpoint ] = new Endpoint( $endpoint, $this, $params, $formatter );
 	}
 }

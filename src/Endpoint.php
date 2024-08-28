@@ -22,11 +22,11 @@ class Endpoint {
 	 * Set up API.
 	 *
 	 * @param string    $endpoint API endpoint.
-	 * @param array     $params   Query params.
 	 * @param array|Api $api  API options.
+	 * @param array     $params   Query params.
 	 * @param Formatter $formatter Formatter.
 	 */
-	public function __construct( public string $endpoint, public array $params = [], public Api $api, public Formatter $formatter ) {
+	public function __construct( public string $endpoint, public Api $api, public array $params = [], public Formatter $formatter = new Formatter() ) {
 		$this->url = $this->make_url();
 	}
 
