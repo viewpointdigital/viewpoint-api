@@ -160,6 +160,8 @@ class Formatter {
 				$array[ $child->getName() ] = self::autoCast( $child );
 			}
 			return $array;
+		} elseif ( is_object( $node ) ) {
+			return (object) $node;
 		} elseif ( is_array( $node ) ) {
 			return (array) $node;
 		} elseif ( 'true' === (string) $node ) {
