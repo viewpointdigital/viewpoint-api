@@ -49,12 +49,12 @@ class Transient {
 	 * @return void
 	 */
 	public function set( $data ) {
-		// Set an expiry flag so we don't make another call until an hour has passed. That way we still have stale data as a fallback in case regeneration is not possible.
+		// Set an expiry flag so we don't make another call until cache time has passed. That way we still have stale data as a fallback for up to a year in case regeneration is not possible.
 		set_transient( 'fresh_' . $this->name, true, 60 * $this->cache );
 		// Store the values indefinetly.
 		if ( ! is_serialized( $data ) ) {
 			$data = maybe_serialize( $data );
 		}
-		set_transient( $this->name, $data, 0 );
+		set_transient( $this->name, $data, YEAR_IN_SECONDS );
 	}
 }
