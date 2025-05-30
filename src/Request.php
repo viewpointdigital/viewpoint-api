@@ -66,6 +66,8 @@ class Request {
 				if ( $this->cache && ! $this->debug ) {
 					$transient->set( $data );
 				}
+			} else {
+				$data = $transient->get();
 			}
 		}
 		$data = apply_filters( 'viewpoint_api_get_data/' . $this->name, $data, $this );
