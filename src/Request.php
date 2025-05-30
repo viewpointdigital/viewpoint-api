@@ -66,7 +66,7 @@ class Request {
 				if ( $this->cache && ! $this->debug ) {
 					$transient->set( $data );
 				}
-			} else {
+			} elseif ( isset( $transient ) && $transient ) {
 				$data = $transient->get();
 			}
 		}
