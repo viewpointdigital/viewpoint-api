@@ -19,6 +19,13 @@ class Api {
 	public $endpoints = [];
 
 	/**
+	 * Configured authentication.
+	 *
+	 * @var Auth
+	 */
+	public $authentication = null;
+
+	/**
 	 * Options for API
 	 *
 	 * @param string      $name API name.
@@ -32,19 +39,31 @@ class Api {
 		public string $base,
 		public array $headers = [],
 		public bool $debug = false,
-		public int|bool $cache = 60
+		public int|bool $cache = 60,
 	) {
 	}
 
 	/**
 	 * Create an endpoint on this API.
 	 *
-	 * @param string    $endpoint  Endpoint base.
-	 * @param array     $params    Parameters.
-	 * @param Formatter $formatter Formatter.
-	 * @return void
+	 * @param string   $base  Endpoint base.
+	 * @param Endpoint $endpoint Endpoint.
 	 */
-	public function add_endpoint( string $endpoint, array $params = [], Formatter $formatter = null ) {
-		$this->endpoints[ $endpoint ] = new Endpoint( $endpoint, $this, $params, $formatter );
+	public function add_endpoint(
+		string $base,
+		Endpoint $endpoint
+	) {
+		$this->endpoints[ $base ] = $endpoint;
+	}
+
+	/**
+	 * Create an authentication interface for the API.
+	 *
+	 * @param Auth $authentication Authentication.
+	 */
+	public function add_authentication(
+		Auth $authentication
+	) {
+		$this->authentication = $authentication;
 	}
 }

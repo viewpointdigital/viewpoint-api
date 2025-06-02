@@ -25,7 +25,7 @@ class Request {
 	 *
 	 * @param string  $name  Namespace for request.
 	 * @param string  $url   Url to call.
-	 * @param array   $params  Request parameters.
+	 * @param mixed   $body  Request parameters.
 	 * @param string  $type  Request type: post|get.
 	 * @param array   $headers  Request headers.
 	 * @param boolean $cache Cache the request results in transient.
@@ -34,7 +34,7 @@ class Request {
 	public function __construct(
 		public string $name,
 		public string $url,
-		public array $params = [],
+		public mixed $body = [],
 		public string $type = 'post',
 		public array $headers = [],
 		public bool $cache = true,
@@ -89,11 +89,11 @@ class Request {
 		if ( $this->debug ) {
 			Logger::log( $this->name . ': ' . $this->url );
 		}
-		if ( 'post' === $this->type ) {
+		if ( 'POST' === strtoupper( $this->type ) ) {
 			$result = wp_remote_post(
 				$this->url,
 				[
-					'body' => $this->params,
+					'body' => $this->body,
 				] + $args
 			);
 		} else {
@@ -110,28 +110,5 @@ class Request {
 			return false;
 		}
 		return $result;
-	}
-
-	/**
-	 * Format response. Utility to help with formatting since an API could return all kinds of things.
-	 *
-	 * @param string       $type Format expected: json.
-	 * @param string|false $key  Key to extract from the response.
-	 * @return mixed
-	 */
-	public function format( $type = 'json', $key = false ) {
-		switch ( $type ) {
-			case 'json':
-				$data = json_decode( $this->response );
-				if ( $key && property_exists( $data, $key ) ) {
-					$data = $data->{$key};
-				}
-				break;
-
-			default:
-				$data = $this->response;
-				break;
-		}
-		return apply_filter( 'viewpoint_api_filter_data', $data, $this );
 	}
 }

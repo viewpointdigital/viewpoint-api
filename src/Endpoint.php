@@ -16,17 +16,24 @@ class Endpoint {
 	 *
 	 * @var string
 	 */
-	private $url;
+	public $url;
 
 	/**
 	 * Set up API.
 	 *
-	 * @param string    $endpoint API endpoint.
-	 * @param array|Api $api  API options.
-	 * @param array     $params   Query params.
-	 * @param Formatter $formatter Formatter.
+	 * @param string       $base API endpoint.
+	 * @param array|Api    $api  API options.
+	 * @param mixed        $params   Query params.
+	 * @param "POST"|"GET" $type Request type.
+	 * @param Formatter    $formatter Formatter.
 	 */
-	public function __construct( public string $endpoint, public Api $api, public array $params = [], public Formatter $formatter = new Formatter() ) {
+	public function __construct(
+		public string $base,
+		public Api $api,
+		public mixed $params = [],
+		public string $type = 'POST',
+		public Formatter $formatter = new Formatter()
+	) {
 		$this->url = $this->make_url();
 	}
 
@@ -36,20 +43,21 @@ class Endpoint {
 	 * @return string
 	 */
 	private function make_url() {
-		$url = $this->api->base . '/' . $this->endpoint . '/';
+		$url = $this->api->base . '/' . $this->base . '/';
 		return apply_filters( 'viewpoint_api_url', $url, $this );
 	}
 
 	/**
 	 * Initialize a Request.
 	 *
-	 * @param string $type Request type: post|get.
 	 * @return Request
 	 */
-	public function request( string $type = 'post' ) {
-		$name = $this->api->name . '-' . $this->endpoint;
+	public function request() {
+		if ( $this->api->authentication ) {
+			$this->api->authentication->addAuthentication();
+		}
 
-		if ( 'get' === $type ) {
+		if ( 'get' === $this->type && is_array( $this->params ) ) {
 			// Modify url with params.
 			$url_args = [];
 			foreach ( $this->params as $key => $value ) {
@@ -57,7 +65,15 @@ class Endpoint {
 			}
 			$this->url = add_query_arg( $url_args, $this->url );
 		}
-		$request = new Request( $name, $this->url, $this->params, $type, $this->api->headers, $this->api->cache, $this->api->debug );
+		$request = new Request(
+			name: $this->base,
+			url: $this->url,
+			body: $this->params,
+			type: $this->type,
+			headers: $this->api->headers,
+			cache: $this->api->cache,
+			debug: $this->api->debug
+		);
 		return $this->formatter->format( $request->response );
 	}
 }
