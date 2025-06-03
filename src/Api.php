@@ -46,14 +46,12 @@ class Api {
 	/**
 	 * Create an endpoint on this API.
 	 *
-	 * @param string   $base  Endpoint base.
 	 * @param Endpoint $endpoint Endpoint.
 	 */
 	public function add_endpoint(
-		string $base,
 		Endpoint $endpoint
 	) {
-		$this->endpoints[ $base ] = $endpoint;
+		$this->endpoints[ $endpoint->base ] = $endpoint;
 	}
 
 	/**
