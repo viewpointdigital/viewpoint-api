@@ -52,7 +52,7 @@ class Request {
 		$data = false;
 		// Try transient.
 		if ( $this->cache && ! $this->debug ) {
-			$transient = new Transient( $this->name );
+			$transient = new Transient( $this->name . '_' . wp_hash( maybe_serialize( $this->body ) ) );
 			if ( $transient && $transient->is_fresh() ) {
 				$data = $transient->get();
 			}
