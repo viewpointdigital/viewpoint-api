@@ -48,6 +48,17 @@ class Endpoint {
 	}
 
 	/**
+	 * Update params so they can be changed before running request.
+	 *
+	 * @param string $key   Key to update.
+	 * @param mixed $value  Value to update.
+	 * @return void
+	 */
+	public function updateParams( $key, $value ) {
+		$this->params[ $key ] = $value;
+	}
+
+	/**
 	 * Initialize a Request.
 	 *
 	 * @return mixed

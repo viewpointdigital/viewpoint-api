@@ -90,10 +90,18 @@ class Request {
 			Logger::log( $this->name . ': ' . $this->url );
 		}
 		if ( 'POST' === strtoupper( $this->type ) ) {
+
+			// Format body as json for json content types.
+			if ( isset( $this->headers['Content-Type'] ) && 'application/json' === $this->headers['Content-Type'] ) {
+				$body = wp_json_encode( $this->body );
+			} else {
+				$body = $this->body;
+			}
+
 			$result = wp_remote_post(
 				$this->url,
 				[
-					'body' => $this->body,
+					'body' => $body,
 				] + $args
 			);
 		} else {
