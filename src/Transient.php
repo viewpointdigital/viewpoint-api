@@ -15,9 +15,9 @@ class Transient {
 	 * Constructor
 	 *
 	 * @param string $name Name of transient.
-	 * @param int    $cache Cache timeout in minutes. Set false to disable cache.
+	 * @param int    $cache Cache timeout in seconds. Set false to disable cache.
 	 */
-	public function __construct( public string $name, public int $cache = 60 ) {
+	public function __construct( public string $name, public int $cache = HOUR_IN_SECONDS, public bool $setFresh = true ) {
 	}
 
 	/**
@@ -48,13 +48,18 @@ class Transient {
 	 * @param mixed $data Data to store.
 	 * @return void
 	 */
-	public function set( $data ) {
-		// Set an expiry flag so we don't make another call until cache time has passed. That way we still have stale data as a fallback for up to a year in case regeneration is not possible.
-		set_transient( 'fresh_' . $this->name, true, 60 * $this->cache );
-		// Store the values indefinetly.
+	public function set( $data, $expiry = null ) {
+		if ( ! $expiry ) {
+			$expiry = $this->cache;
+		}
+		if ( $this->setFresh ) {
+			// Set an expiry flag so we don't make another call until cache time has passed. That way we still have stale data as a fallback for up to a year in case regeneration is not possible.
+			set_transient( 'fresh_' . $this->name, true, $expiry );
+		}
+		// Store the values for a year, if using fresh mechanism.
 		if ( ! is_serialized( $data ) ) {
 			$data = maybe_serialize( $data );
 		}
-		set_transient( $this->name, $data, YEAR_IN_SECONDS );
+		set_transient( $this->name, $data, $this->setFresh ? YEAR_IN_SECONDS : $this->cache );
 	}
 }

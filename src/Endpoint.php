@@ -43,18 +43,18 @@ class Endpoint {
 	 * @return string
 	 */
 	private function make_url() {
-		$url = $this->api->base . '/' . $this->base . '/';
+		$url = $this->api->base . '/' . $this->base;
 		return apply_filters( 'viewpoint_api_url', $url, $this );
 	}
 
 	/**
 	 * Initialize a Request.
 	 *
-	 * @return Request
+	 * @return mixed
 	 */
 	public function request() {
 		if ( $this->api->authentication ) {
-			$this->api->authentication->addAuthentication();
+			$this->api->authentication->authenticate();
 		}
 
 		if ( 'get' === $this->type && is_array( $this->params ) ) {
