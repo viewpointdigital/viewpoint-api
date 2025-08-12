@@ -13,14 +13,14 @@ class Auth {
 	 *
 	 * @param string   $type              Authentication type: Basic, JWT, oAuth.
 	 * @param Api      $api               API to apply authentication to.
-	 * @param Endpoint $authEndpoint      Endpoint to authenticate against.
+	 * @param Endpoint|null $authEndpoint      Endpoint to authenticate against.
 	 * @param string   $accessToken       Access token.
 	 * @param int      $accessTokenExpiry Access token expiry in seconds.
 	 */
 	public function __construct(
 		public string $type,
 		public Api $api,
-		private Endpoint $authEndpoint,
+		private Endpoint|null $authEndpoint = null,
 		private string $accessToken = '',
 		private int $accessTokenExpiry = 0,
 	) {
@@ -35,6 +35,9 @@ class Auth {
 		switch ( $this->type ) {
 			case 'Basic':
 				$this->authenticateBasic();
+				break;
+			case 'Bearer':
+				$this->authenticateBearer();
 				break;
 			case 'JWT':
 				$this->authenticateJWT();
@@ -52,11 +55,23 @@ class Auth {
 	}
 
 	/**
+	 * Authenticate Bearer.
+	 *
+	 * @return void
+	 */
+	private function authenticateBearer() {
+		$this->api->headers['Authorization'] = 'Bearer ' . $this->accessToken;
+	}
+
+	/**
 	 * Authenticate JWT.
 	 *
 	 * @return void
 	 */
 	private function authenticateJWT() {
+		if ( ! $this->authEndpoint ) {
+			return;
+		}
 		$authTokenTransient = new Transient(
 			name: $this->authEndpoint->api->name . '_auth',
 			setFresh: false,
