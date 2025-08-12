@@ -112,7 +112,10 @@ class Formatter {
 	 * @return mixed
 	 */
 	private static function getDataFromObject( $field, $obj ) {
-		$value = false;
+		$value = apply_filters( 'viewpoint_api_get_data_from_object', false, $field, $obj );
+		if ( $value ) {
+			return $value;
+		}
 		if ( is_a( $obj, 'SimpleXMLElement' ) ) {
 			if ( str_starts_with( $field, 'xpath:' ) ) {
 				$value = $obj->xpath( str_replace( 'xpath:', '', $field ) );
