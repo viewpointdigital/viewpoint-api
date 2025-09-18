@@ -51,7 +51,7 @@ class Auth {
 	 * @return void
 	 */
 	private function authenticateBasic() {
-		$this->api->headers['Authorization'] = 'Basic ' . $this->accessToken;
+		$this->api->headers['Authorization'] = 'Basic ' . base64_encode( $this->accessToken );
 	}
 
 	/**
