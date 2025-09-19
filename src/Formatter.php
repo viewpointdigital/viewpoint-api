@@ -26,7 +26,7 @@ class Formatter {
 	 * @param string $data Data type.
 	 * @return mixed
 	 */
-	public function format( $data ) {
+	public function format( $data, $skipKey = false ) {
 		switch ( $this->type ) {
 			case 'json':
 				$value = $this->formatJson( $data );
@@ -37,7 +37,7 @@ class Formatter {
 			default:
 				$value = $data;
 		}
-		if ( $this->key ) {
+		if ( ! $skipKey && $this->key ) {
 			return self::getNestedKeys( $this->key, $value );
 		}
 		return $value;
