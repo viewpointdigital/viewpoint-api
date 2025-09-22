@@ -90,7 +90,10 @@ class Endpoint {
 			$data                          = $this->formatter->format( $request->response, true );
 			$this->pagination->totalPages  = intval( Formatter::getNestedKeys( [ 'pagination', 'totalPages' ], $data ) );
 			$this->pagination->currentPage = intval( Formatter::getNestedKeys( [ 'pagination', 'currentPage' ], $data ) );
-			$responses                     = array_merge( $responses, $this->formatter->format( $request->response ) );
+			$formattedResponse = $this->formatter->format( $request->response );
+			if ( is_array( $formattedResponse ) ) {
+				$responses = array_merge( $responses, $this->formatter->format( $request->response ) );
+			}
 			if ( is_array( $this->pagination->pageParam ) && ! empty( $this->pagination->pageParam ) ) {
 				$currentParam = &$this->params;
 				foreach ( $this->pagination->pageParam as $param ) {
