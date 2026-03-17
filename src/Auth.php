@@ -27,6 +27,16 @@ class Auth {
 	}
 
 	/**
+	 * Get the access token.
+	 *
+	 * @return string
+	 */
+	public function getAccessToken(): string {
+		$this->authenticate();
+		return $this->accessToken;
+	}
+
+	/**
 	 * Authenticate the api.
 	 *
 	 * @return void
